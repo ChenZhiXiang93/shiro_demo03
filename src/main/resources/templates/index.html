@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+    <script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+    <script type="text/javascript">
+        function page(url) {
+            $.get(
+                url,
+                function (data){
+                    console.log("dfd"+JSON.stringify(data));
+                    var status = data.respCode;
+                    if (status == 1003 ) {
+                        alert("权限不足");
+                        return;
+                    }
+                },
+                "json"
+            );
+            $("#showPage").prop("src", url);
+        };
+    function dianji(){
+        $.ajax({
+            url: "/t",
+            data: {},
+            success: function (data) {
+                console.log("ss" + JSON.stringify(data));
+                console.log("ss" + data.respCode);
+                var status = data.respCode;
+                if (status == 1003 ) {
+                    alert("权限不足");
+                    return;
+                }
+            }
+        })}
+    </script>
+</head>
+
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <img src="img/u8.png" class="img img-responsive img-rounded"/>
+    </div>
+    <div class="col-xs-1" style="float: left;">
+        <div class="row">
+            <a class="btn btn-danger" href="javascript:void(0)" onclick="page('/user/listUser')">用户管理</a>
+        </div>
+        <div class="row">
+            <a class="btn btn-danger" href="javascript:void(0)" onclick="page('/role/listRole')">角色管理</a>
+        </div>
+        <div class="row">
+            <a class="btn btn-danger" onclick="dianji()">资源管理</a>
+        </div>
+        <div class="row">
+            <a class="btn btn-danger" href="/logout">退出</a>
+        </div>
+    </div>
+    <div class="col-xs-10" style="float: left;">
+        <iframe src="html/center/center.html" id="showPage" class="col-xs-12" style="height: 600px;"></iframe>
+    </div>
+</div>
+</body>
+</html>

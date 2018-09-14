@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:HH="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>用户列表</title>
+</head>
+<link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+<body>
+
+<div class="container">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <td>用户名称</td>
+            <td>用户</td>
+            <td>性别</td>
+            <td>年龄</td>
+            <td>手机号</td>
+            <td>状态</td>
+            <td>创建时间</td>
+            <td>操作</td>
+        </tr>
+        <tr th:each="u : ${lists}">
+            <td th:text="${u.loginName}">用户名</td>
+            <td th:text="${u.name}">用户</td>
+            <td th:text="${u.sex eq 1}? '男' : '女'">性别</td>
+            <td th:text="${u.age}">年龄</td>
+            <td th:text="${u.phone}">手机号</td>
+            <td th:text="${u.status eq 0 ? '启用' : '禁用'}">状态</td>
+            <td th:text="${#dates.format(u.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+
+            <script>
+                function shouquan(id){
+                    $.post(
+                        "/user/shouquan",
+                        function (data){
+                            if(data.status == 403){
+                                alert("权限不足");
+                                return;
+                            } else {
+                                location.href="/user/shouquan?id="+id;
+                            }
+                        },
+                        "json"
+                    );
+
+                }
+            </script>
+
+            <td>
+                <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs" th:onclick="'javascript:shouquan(\''+${u.id}+'\');'" >授权</a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

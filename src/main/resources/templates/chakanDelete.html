@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>查看被删除的资源</title>
+    <link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+    <script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+    <script>
+        function delete1(ids) {
+
+            $.post(
+                "/resource/deleteResource",
+                {
+                    ids: ids,
+                    status: 0
+                },
+                function (data) {
+                    if (data == 1) {
+                        alert("成功");
+                        location.reload();
+                    }
+                    else {
+                        alert("失败")
+                    }
+                },
+                "json"
+            );
+
+        }
+
+        function toList() {
+            location.href = "/resource/listResource"
+        }
+
+    </script>
+<body>
+
+<div class="container">
+    <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs"
+       th:onclick="'javascript:toList();'">去资源列表</a>
+    <table class="table table-bordered table-hover">
+        <tr>
+            <td>编号</td>
+            <td>权限名称</td>
+            <td>url</td>
+            <td>介绍</td>
+            <td>创建时间</td>
+            <td>状态</td>
+            <td>操作</td>
+        </tr>
+        <!-- 该出不允许 出现空格  在role 后面逗号后面跟的状态变量-->
+        <tr th:each="resources,resourcesStat : ${resources}">
+            <td th:text="${resourcesStat.count}"></td>
+            <td th:text="${resources.name}">xx</td>
+            <td th:text="${resources.url}">xx</td>
+            <td th:text="${resources.description}">xx</td>
+            <td th:text="${#dates.format(resources.createTime,'yyyy-MM-dd HH:mm:ss')}">创建时间</td>
+            <td th:text="${resources.status == 1}? '禁用' : '启用'">xx</td>
+
+            <td>
+                <a href="javascript:void(0)" class="btn btn-danger btn-primary btn-xs"
+                   th:onclick="'javascript:delete1(\''+${resources.id}+'\');'">恢复</a>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+</body>
+</html>

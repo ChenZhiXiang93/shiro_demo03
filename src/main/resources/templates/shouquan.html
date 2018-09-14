@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>授权页面</title>
+</head>
+<link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+<body>
+<div th:align="center">
+    <h3 th:text="${role.name}+授权页面"></h3>
+</div>
+<span th:each="r,stat : ${resources}">
+            <span th:if="${r.opened == 2}">
+                <h5 th:text="${r.description}">xx</h5>
+            </span>
+     <span th:if="${r.opened != 2}">
+                    <input type="checkbox" th:value="${r.id}" th:name="id" th:text="${r.description}"
+                           th:checked="${r.flag}"/>
+                </span>
+    </div>
+</span>
+
+<script>
+
+    function xiugai(rid){
+        var ids = "";
+       $("[name='id']:checked").map(function(){
+           ids += " ,"+$(this).val();
+       });
+       ids = ids.substring(2);
+
+
+       $.post(
+           "/role/shouquanRole",
+           {
+               ids: ids,
+               rid : rid
+           },
+           function (data) {
+               if (data == 1){
+                   alert("成功");
+                   location.href="/role/listRole";
+               } else {
+                   alert("失败")
+               }
+           },
+           "json"
+       );
+
+    }
+
+</script>
+
+<a href="javascript:void(0)" th:onclick="'javascript:xiugai(\''+${role.id}+'\')'" class="btn btn-success btn-primary btn-xs">修改权限</a>
+</body>
+</html>

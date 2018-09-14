@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>登录页面</title>
+
+    <link type="text/css" rel="stylesheet" th:href="@{bootstrap-3.3.7/css/bootstrap.css}"/>
+    <script type="text/javascript" th:src="@{bootstrap-3.3.7/js/jquery.js}"></script>
+    <script type="text/javascript" th:src="@{bootstrap-3.3.7/js/bootstrap.js}"></script>
+    <script>
+        function login() {
+            var username = $("[name='loginName']").val();
+            var password = $("[name='password']").val();
+            var imageCode = $("[name='imageCode']").val();
+            var rememberMe = $("[name='rememberMe']").prop("checked");
+            if (imageCode == "" || imageCode == undefined) {
+                alert("请输入验证码");
+                return;
+            }else {
+                if (username == "" || username == undefined) {
+                    alert("请输入用户名");
+                    return;
+                } else {
+                    if (password == "" || password == undefined) {
+                        alert("请输入密码");
+                        return;
+                    } else {
+                        $.ajax({
+                            url: "/loginUser",
+                            data: {
+                                username: username,
+                                password: password,
+                                imageCode: imageCode,
+                                rememberMe: rememberMe
+                            },
+                            success: function (data) {
+                                console.log("ss"+JSON.stringify(data));
+                                console.log("ss"+data.respCode);
+                                if (data == 3) {
+                                    location.href = "index";
+                                    return;
+                                }
+                                var status = data.respCode;
+                                if (status == 1002) {
+                                    alert("用户名不存在");
+                                } else if (status == 1001) {
+                                    alert("密码不正确");
+                                } else if (status == 1004){
+                                    alert("验证码不正确");
+                                }
+                            },
+                            dataType: "json",
+                            type: "post"
+                        });
+                    }
+                }
+            }
+        }
+        function refresh(obj){
+            obj.src="/gif/getGifCode?id="+Math.random();
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+    <input type="button" class="btn btn-success" onclick="zhuce()" value="注册">
+
+    <script>
+        function zhuce() {
+            location.href = "/zhuce";
+        }
+    </script>
+    <form class="form-horizontal" th:method="post" th:action="@{loginUser}" style="margin-top: 100px">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Username</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="inputEmail3" name="loginName" placeholder="请输入用户名">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="password" id="inputPassword3" placeholder="请输入密码">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">验证码</label>
+            <div class="col-sm-10">
+                <input type="password" class="form-control" name="imageCode" id="imageCode" placeholder="请输入密码">
+                <img onclick="refresh(this)" alt="验证码" src="/gif/getGifCode">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="rememberMe">记住我
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="button" class="btn btn-success" onclick="login()" value="登录">
+            </div>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

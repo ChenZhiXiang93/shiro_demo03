@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>添加父资源</title>
+</head>
+<body>
+<link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+
+<form>
+    <h3 th:align="center">添加父资源</h3>
+    <div class="row">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">资源名称</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:name="name" id="inputEmail3" placeholder="请输入英文资源名称">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label for="inputEmail5" class="col-sm-2 control-label">资源介绍</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" th:name="description" id="inputEmail5" placeholder="请输入中文资源名称">
+            </div>
+        </div>
+    </div>
+    <script>
+        function add() {
+            var description = $("[name='description']").val();
+            var name = $("[name='name']").val();
+
+
+            $.post(
+                "/resource/addResource",
+                {
+                    name: name,
+                    description: description
+                },
+                function (data) {
+                    if (data == 1) {
+                        alert("成功");
+                        location.href = "/resource/listResource";
+                    } else {
+                        alert("失败")
+                    }
+                },
+                "json"
+            );
+        }
+    </script>
+    <div class="row">
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs"
+                   th:onclick="'javascript:add()'">添加父资源</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>

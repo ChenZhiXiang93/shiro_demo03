@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="czx.wt.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="czx.wt.pojo.User">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="login_name" property="loginName" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <collection property="roles" ofType="czx.wt.pojo.Role">
+            <id column="id" property="id"></id>
+            <result column="name" property="rname"></result>
+            <result column="description" property="description"></result>
+            <result column="status" property="status"></result>
+            <collection property="resources" ofType="czx.wt.pojo.Resource">
+                <id column="id" property="reid"></id>
+                <result column="name" property="rename"></result>
+                <result column="url" property="url"></result>
+                <result column="description" property="redescription"></result>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="loginUserByLoninName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT u.*,r.*,re.* FROM user u
+        inner join user_role ur on ur.user_id=u.id
+        inner join role r on r.id=ur.role_id
+        inner join role_resource rr on rr.role_id=r.id
+        inner join resource re on re.id=rr.resource_id
+        WHERE u.login_name = #{username};
+    </select>
+</mapper>

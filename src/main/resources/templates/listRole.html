@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+</head>
+<link type="text/css" rel="stylesheet" th:href="@{~/bootstrap-3.3.7/css/bootstrap.css}"/>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/jquery.js}"></script>
+<script type="text/javascript" th:src="@{~/bootstrap-3.3.7/js/bootstrap.js}"></script>
+
+<body>
+
+    <script>
+        function add(){
+            location.href="/role/toAddRole";
+        }
+
+        function delete1(ids){
+
+            $.post(
+                "/role/deleteRole",
+                {
+                    ids:ids
+                },
+                function(data){
+                    if (data == 1) {
+                        alert("成功");
+                        location.href = "/role/listRole";
+                    } else if (data == 3){
+                        alert("该资源还与角色绑定,请先接触绑定, 才可以删除");
+                    }
+                    else {
+                        alert("失败")
+                    }
+                },
+                "json"
+            );
+        }
+        function chakan(){
+            location.href="/role/chakan";
+        }
+    </script>
+
+    <div class="container">
+        <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs" th:onclick="'javascript:add();'">创建角色</a>
+        <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs" th:onclick="'javascript:chakan();'">查看删除的资源</a>
+
+        <table class="table table-bordered table-hover">
+            <tr>
+                <td>编号</td>
+                <td>角色名称</td>
+                <td>介绍</td>
+                <td>状态</td>
+                <td>操作</td>
+            </tr>
+            <script>
+                function shouquan(id,username){
+                    location.href="shouquan?id="+id;
+                }
+            </script>
+            <!-- 该出不允许 出现空格  在role 后面逗号后面跟的状态变量-->
+            <tr th:each="role,roleStat : ${lists}">
+                <td th:text="${roleStat.count}"></td>
+                <td th:text="${role.name}">xx</td>
+                <td th:text="${role.description}">xx</td>
+                <td th:text="${role.status == 1}? '禁用' : '启用'">xx</td>
+                <td>
+                    <a href="javascript:void(0)" class="btn btn-success btn-primary btn-xs" th:onclick="'javascript:shouquan(\''+${role.id}+'\');'">授权</a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-primary btn-xs" th:onclick="'javascript:delete1(\''+${role.id}+'\');'">删除</a>
+                </td>
+            </tr>
+
+        </table>
+
+
+
+    </div>
+
+</body>
+</html>
